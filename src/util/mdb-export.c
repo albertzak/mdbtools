@@ -66,7 +66,16 @@ print_col(FILE *outfile, gchar *col_val, int quote_text, int col_type, int bin_l
 #endif
 			} else if (is_binary_type(col_type) && *col_val <= 0 && bin_mode == MDB_BINEXPORT_OCTAL)
 				fprintf(outfile, "\\%03o", *(unsigned char*)col_val++);
-			else
+
+			else if (*col_val == 13) {
+				col_val++;
+				putc('\\', outfile);
+				putc('r', outfile);
+			} else if (*col_val == 10) {
+				col_val++;
+				putc('\\', outfile);
+				putc('n', outfile);
+			} else
 				putc(*col_val++, outfile);
 		}
 		fputs(quote_char, outfile);
